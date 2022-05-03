@@ -1,7 +1,7 @@
-import Layout from "./Screens/Layout";
+import TabNavigator from './Navigation/Tabs';
 
 export default function App() {
   return (
-    <Layout/>
+    <TabNavigator/>
   );
 }
