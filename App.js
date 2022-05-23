@@ -1,7 +1,12 @@
-import TabNavigator from './Navigation/Tabs';
+import { LogBox } from 'react-native';
+import ShopProvider from './Context/ShopProvider';
+import MainNavigator from './Navigation';
 
 export default function App() {
+  LogBox.ignoreLogs(["timer"])
   return (
-    <TabNavigator/>
+    <ShopProvider>
+      <MainNavigator/>
+    </ShopProvider>
   );
 }

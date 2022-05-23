@@ -8,7 +8,7 @@ const CartStack = () => {
 
     return (
         <Stack.Navigator>
-            <Stack.Screen
+            <Stack.Screen 
                 name="Cart"
                 component={Cart}
                 options={{

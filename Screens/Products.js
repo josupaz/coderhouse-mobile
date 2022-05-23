@@ -1,52 +1,78 @@
-import { useEffect, useState } from 'react';
-import {Text, View, ActivityIndicator, FlatList, TouchableOpacity} from 'react-native';
-import { fetching } from '../Services/fetch';
+import { useContext, useEffect, useState } from "react";
+import {
+  Text,
+  View,
+  ActivityIndicator,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import { Shop } from "../Context/ShopProvider";
+import { colors } from "../Styles/colors";
 
-const Products = ({navigation, route}) => {
-  const {category} = route.params;
+const Products = ({ navigation, route }) => {
+  const { category } = route.params;
 
-  const [products, setProducts] = useState([])
+  const { products } = useContext(Shop);
 
-  useEffect(()=> {
+  const [productFilter, setProductFilter] = useState([]);
 
-    (async ()=>{
-      const data = await fetching('https://fakestoreapi.com/products/category/' + category)
-      setProducts(data);
-    })()
-
-  }, [category])
+  useEffect(() => {
+    (async () => {
+      const productFilter = products.filter(
+        (product) => product.species === category
+      );
+      setProductFilter(productFilter);
+    })();
+  }, [category]);
 
   const handleDetail = (item) => {
-    navigation.navigate('Detail', {
+    navigation.navigate("Detail", {
       id: item.id,
-      title: item.title,
+      title: item.name,
       item: item,
-    })
-  }
+    });
+  };
 
   return (
-    <View>
-      <Text>Products</Text>
-      {products.length !== 0 ? 
+    <View style={styles.viewstyle}>
+      {products.length !== 0 ? (
         <FlatList
-          data={products}
-          renderItem={( {item} ) => {
-            return <TouchableOpacity
-              onPress={() => handleDetail(item)}
-            >
-              <Text>
-                {item.title}
-              </Text>
-            </TouchableOpacity>
-          }
-          }
-          keyExtractor={item => item.id.toString()}
+          data={productFilter}
+          renderItem={({ item }) => {
+            return (
+              <TouchableOpacity onPress={() => handleDetail(item)}>
+                <Text style={styles.text}>{item.name}</Text>
+              </TouchableOpacity>
+            );
+          }}
+          keyExtractor={(item) => item.id.toString()}
         />
-        :
-        <ActivityIndicator size={"large"} color={"blue"}/>
-      }
+      ) : (
+        <ActivityIndicator size={"large"} color={"blue"} />
+      )}
     </View>
-  )
-}
+  );
+};
 
-export default Products
+export default Products;
+
+const styles = StyleSheet.create({
+  viewstyle: {
+    flex: 1,
+    backgroundColor: colors.primary,
+    flexDirection:'row',
+  },
+  text : {
+    textAlign:'center',
+    padding: 12,
+    marginTop: 30,
+    borderWidth: 4,
+    borderColor: colors.black,
+    borderRadius: 6,
+    borderRadius: 8,
+
+  },
+
+  
+});
